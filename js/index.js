@@ -1,13 +1,59 @@
 $(document).ready(function () {
-  fetch(baseUrl, {
+  fetchProduct(baseUrl);
+  const inputElement = document.querySelector(".search-input");
+  inputElement.addEventListener("change", (event) => {
+    let url = `https://dummyjson.com/products/search?q=${event.target.value}`;
+    fetchProduct(url);
+  });
+});
+
+const fetchProduct = (url) => {
+  const mainDiv = document.querySelector(".demo-list");
+  mainDiv.setAttribute("class", "demo-skeleton");
+  fetch(url, {
     method: "GET",
   })
     .then((res) => res.json())
     .then((res) => {
-      res.products.length > 0 && getElemnetArray(res.products);
+      mainDiv.setAttribute("class", "demo-list");
+      if (res.products.length > 0) {
+        let limit = 10;
+        let resultArray = [];
+        let getArrayProduct = [];
+        let initArray = [];
+        initArray = JSON.parse(JSON.stringify(res.products));
+        const copyArray = JSON.parse(JSON.stringify(res.products));
+        const cloneArray = JSON.parse(JSON.stringify(copyArray));
+        resultArray = cloneArray.splice(0, limit);
+        getArrayProduct = copyArray;
+        getElemnetArray(resultArray);
+        $(window).on("scroll", function () {
+          if (
+            $(window).scrollTop() >=
+            $(".demo-list").offset().top +
+              $(".demo-list").outerHeight() -
+              window.innerHeight
+          ) {
+            limit = limit + 10;
+            if (initArray.length > 0) {
+              getElemnetArray([]);
+            }
+            if (limit <= initArray.length) {
+              if (getArrayProduct.length === initArray.length) {
+                getArrayProduct = getArrayProduct.splice(0, limit);
+                getElemnetArray(getArrayProduct);
+              } else {
+                getArrayProduct = initArray.splice(0, limit);
+                getElemnetArray(getArrayProduct);
+              }
+            }
+          }
+        });
+      }else {
+        getElemnetArray([])
+      }
     });
-});
-
+};
 const rating = (stars) => "★★★★★☆☆☆☆☆".slice(5 - stars, 10 - stars);
 function getElemnetArray(array = []) {
   const mainDiv = document.getElementsByClassName("demo-list");
@@ -63,8 +109,8 @@ function getElemnetArray(array = []) {
       priceProduct.style.fontSize = "14px";
       const albumImage = document.createElement("div");
       albumImage.className = "album-image";
-      albumImage.style.display = 'flex';
-      albumImage.style.width = '100%'
+      albumImage.style.display = "flex";
+      albumImage.style.width = "100%";
       divInformationProduct[i].appendChild(brandProduct);
       divInformationProduct[i].appendChild(titleProduct);
       divInformationProduct[i].appendChild(categoryProduct);
@@ -101,23 +147,26 @@ function getElemnetArray(array = []) {
           ratingProduct[j].append(starSelected);
           for (let k = 0; k < array[i].images.length; k++) {
             const imageAppend = document.createElement("div");
-            imageAppend.className = 'image-detail';
-            imageAppend.style.width = '30px';
-            imageAppend.style.height = '30px';
-            imageAppend.style.backgroundSize = '37px';
-            imageAppend.style.marginLeft = '10px'
-            imageAppend.style.backgroundRepeat = 'no-repeat';
-            imageAppend.style.backgroundPosition = 'center';
+            imageAppend.className = "image-detail";
+            imageAppend.style.width = "30px";
+            imageAppend.style.height = "30px";
+            imageAppend.style.backgroundSize = "37px";
+            imageAppend.style.marginLeft = "10px";
+            imageAppend.style.backgroundRepeat = "no-repeat";
+            imageAppend.style.backgroundPosition = "center";
             albumImage[j].append(imageAppend);
           }
-          const getDetailImageAlbum = document.getElementsByClassName('image-detail');
-          for(let m = 0; m < getDetailImageAlbum.length; m++) {
-            for (let k = 0; k < array[i].images.length; k++) { 
-              if(m === k ) {
-                getDetailImageAlbum[i].style.backgroundImage = `url(${array[i].images[k]})`
+          const getDetailImageAlbum =
+            document.getElementsByClassName("image-detail");
+          for (let m = 0; m < getDetailImageAlbum.length; m++) {
+            for (let k = 0; k < array[i].images.length; k++) {
+              if (m === k) {
+                getDetailImageAlbum[
+                  i
+                ].style.backgroundImage = `url(${array[i].images[k]})`;
               }
             }
-          }  
+          }
 
           if (rating(array[i].rating).split("☆").length > 1) {
             const arrayStarNotSelected = [];
@@ -140,5 +189,7 @@ function getElemnetArray(array = []) {
         }
       }
     }
+  } else {
+    mainDiv[0].innerHTML = "";
   }
 }

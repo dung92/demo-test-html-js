@@ -1,1 +1,1 @@
-const baseUrl = 'https://dummyjson.com/products'
+const baseUrl = 'https://dummyjson.com/products/'
