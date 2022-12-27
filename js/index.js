@@ -62,10 +62,8 @@ function getElemnetArray(array = []) {
     for (let i = 0; i < array.length; i++) {
       const divProduct = document.createElement("div");
       divProduct.className = "div-product";
-      divProduct.style.flexGrow = 1;
-      divProduct.style.width = "33.33%";
-      divProduct.style.display = "flex";
-      divProduct.style.alignItems = "center";
+      divProduct.style.display = 'flex';
+      // divProduct.style.flex = "1 1 33.33%";
       mainDiv[0].appendChild(divProduct);
     }
     const divProduct = document.getElementsByClassName("div-product");
