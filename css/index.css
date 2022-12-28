@@ -1,7 +1,7 @@
 .demo-list {
   display: grid;
   grid-auto-flow: row;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(2, 1fr);
 }
 .search-input {
@@ -29,4 +29,9 @@
   100% {
     background-position: calc(200px + 100%) 0;
   }
+}
+
+body {
+  overflow-y: scroll;
+  height: 10px;
 }
